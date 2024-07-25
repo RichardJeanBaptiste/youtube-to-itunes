@@ -1,0 +1,19 @@
+{
+  "name": "youtube-to-itunes",
+  "version": "1.0.0",
+  "description": "Youtube Audio to Itunes File Conveter",
+  "main": "main.js",
+  "author": "Richard Jean-Baptiste",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.2.1"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

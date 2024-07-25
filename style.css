@@ -1,0 +1,11 @@
+.link_input {
+    display:flex;
+    flex-direction: row;
+    margin-top: 3%;
+}
+
+.link_input input{
+    width: 85%;
+    height: 2%;
+}
+
