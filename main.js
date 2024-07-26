@@ -1,7 +1,7 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('node:path')
 
 const createWindow = () => {
@@ -20,21 +20,32 @@ const createWindow = () => {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
-  ipcMain.on('open-popup', () => {
+
+  ipcMain.handle('open-popup', async(event, link) => {
+    let currentLink = await link;
+
     let popupWindow = new BrowserWindow({
-      width: 400,
-      height: 300,
+      width: 500,
+      height: 500,
       parent: mainWindow,  // Make the main window the parent
-      modal: true,         // Make the popup modal (disables main window)
-      resizable: false,
+      modal: false,         // Make the popup modal (disables main window)
+      closable: true,
+      resizable: true,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        preload: path.join(__dirname, './preload.js')
       }
     });
-  
-    popupWindow.loadFile('./Popup/popup.html');  // Load your popup HTML file
-    //popupWindow.webContents.openDevTools(); // Optional: open DevTools for the popup window
-  });
+    
+    popupWindow.loadFile('./Popup/popup.html');
+    
+    popupWindow.webContents.on('did-finish-load', () => {
+      popupWindow.webContents.send("currentLink", currentLink);
+    });
+    
+    popupWindow.webContents.openDevTools(); // Optional: open DevTools for the popup window
+
+  })
 }
 
 
