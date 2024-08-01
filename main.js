@@ -4,8 +4,8 @@ const path = require('node:path')
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 750,
+    height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -22,7 +22,7 @@ const createWindow = () => {
     let currentLink = await link;
 
     let popupWindow = new BrowserWindow({
-      width: 500,
+      width: 700,
       height: 500,
       parent: mainWindow,  // Make the main window the parent
       modal: false,         // Make the popup modal (disables main window)
@@ -44,8 +44,6 @@ const createWindow = () => {
 
   })
 }
-
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
