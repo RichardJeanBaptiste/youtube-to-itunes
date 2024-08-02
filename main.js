@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, webContents } = require('electron');
-const path = require('node:path')
+const path = require('node:path');
+const { getVideoInfo } = require('./ytdl-downloads.js');
 
 const createWindow = () => {
   // Create the browser window.
@@ -36,7 +37,9 @@ const createWindow = () => {
     
     popupWindow.loadFile('./Popup/popup.html');
     
-    popupWindow.webContents.on('did-finish-load', () => {
+    popupWindow.webContents.on('did-finish-load', async () => {
+      let videoInfo = await getVideoInfo(currentLink);
+      console.log(videoInfo);
       popupWindow.webContents.send("currentLink", currentLink);
     });
     

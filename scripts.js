@@ -1,9 +1,8 @@
-const searchBtn = document.getElementById("searchBtn");
-const linkInput = document.getElementById("yt-link");
+const searchBtn = document.getElementById("search_btn");
 
-searchBtn.addEventListener('click', () => {
-    
-    window.electronAPI.searchLink(linkInput.value);
+searchBtn.addEventListener('click', async () => {
+    let text =  await navigator.clipboard.readText();
+    window.electronAPI.searchLink(text);
 });
 
 

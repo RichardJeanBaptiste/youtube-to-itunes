@@ -3,7 +3,6 @@ const { contextBridge, ipcRenderer } = require('electron/renderer');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     searchLink: (link) => {
-        //console.log(link);
         ipcRenderer.invoke('open-popup', link);
     },
     send: (channel, data) => ipcRenderer.send(channel, data),

@@ -8,33 +8,29 @@ const logger = require('progress-estimator')();
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 
 const getVideoInfo = async (url) => {
+
+    console.log("=".repeat(100));
     try {
         const videoInfo = await youtubedl(url, {
             dumpSingleJson: true,
-            listFormats: true,
+            //listFormats: true,
         });
 
-        console.log(videoInfo);
-
-        const lines = formats.split('\n');
-        const audioFormats = lines.filter(line => line.includes('audio only'));
-    
-        if (audioFormats.length === 0) {
-          console.log('No audio formats found.');
-          return;
-        }
-    
-        console.log('Available audio resolutions:');
-
-        audioFormats.forEach(format => {
-          console.log(format);
-        });
+        console.log(videoInfo.title);
+        console.log("-".repeat(50));
+        console.log(videoInfo.thumbnail);
+        console.log("-".repeat(50));
+        console.log(videoInfo.description);
+        console.log("-".repeat(50));
 
         return {
             title: videoInfo.title,
+            thumbnail: videoInfo.thumbnail,
+            description: videoInfo.description
         }
     } catch (error) {
         console.error('Error fetching video info:', error);
+        return error;
     }
 }
 
@@ -53,8 +49,9 @@ const listAudioResolutions = async (url) => {
       }
   
       console.log('Available audio resolutions:');
+      console.log(audioFormats[0]);
       audioFormats.forEach(format => {
-        console.log(`${format} \n\n`);
+        console.log(`${format}`);
       });
     } catch (error) {
       console.error('Error fetching formats:', error);
