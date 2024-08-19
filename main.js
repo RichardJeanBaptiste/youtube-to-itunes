@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('node:path');
-const { getVideoInfo } = require('./ytdl-downloads.js');
+const { getVideoInfo, downloadVideo, downloadPlaylist } = require('./ytdl-downloads.js');
 
 const createWindow = () => {
   // Create the browser window.
@@ -13,39 +13,52 @@ const createWindow = () => {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html');
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  let popupWindow = new BrowserWindow({
+    width: 700,
+    height: 500,
+    parent: mainWindow,  // Make the main window the parent
+    modal: false,         // Make the popup modal (disables main window)
+    closable: true,
+    resizable: true,
+    webPreferences: {
+      nodeIntegration: true,
+      preload: path.join(__dirname, './preload.js')
+    }
+  });
 
+  ipcMain.handle('quick-download', async (event, link) => {
+      console.log("main process: Checking Link");
+      const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
+      const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com)\/(playlist\?list=)([a-zA-Z0-9_-]+)/;
 
-  ipcMain.handle('open-popup', async(event, link) => {
-    let currentLink = await link;
-
-    let popupWindow = new BrowserWindow({
-      width: 700,
-      height: 500,
-      parent: mainWindow,  // Make the main window the parent
-      modal: false,         // Make the popup modal (disables main window)
-      closable: true,
-      resizable: true,
-      webPreferences: {
-        nodeIntegration: true,
-        preload: path.join(__dirname, './preload.js')
+      if(videoRegex.test(link)) {
+        downloadVideo(link, 'audio', 'mp3');
+      } else if(playlistRegex.test(link)){
+       
+        popupWindow.loadFile('./Popup/popup.html');
+        popupWindow.webContents.on('did-finish-load', async () => {
+          let info = await getVideoInfo(link);
+          //console.log(info);
+          popupWindow.webContents.send('videoInfo', info, link);
+          //popupWindow.webContents.openDevTools();
+        })
+      } else {
+        console.log("Invalid Link");
       }
-    });
-    
-    popupWindow.loadFile('./Popup/popup.html');
-    
-    popupWindow.webContents.on('did-finish-load', async () => {
-      let videoInfo = await getVideoInfo(currentLink);
-      console.log(videoInfo);
-      popupWindow.webContents.send("currentLink", currentLink);
-    });
-    
-    popupWindow.webContents.openDevTools(); // Optional: open DevTools for the popup window
-
   })
+
+  ipcMain.handle('download-playlist', async (event, metadata) => {
+      console.log(`Main Process - Download Playlist:\n ${"===".repeat(30)}`);
+      console.log(metadata);
+      
+      popupWindow.close();
+      downloadPlaylist(metadata.link, 'playlists', 'mp3');
+
+  });
+
+ 
 }
 
 // This method will be called when Electron has finished

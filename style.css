@@ -17,8 +17,8 @@
 
 .search_btn {
     position: absolute;
-    top: 18%;
-    left: 1%;
+    top: 10%;
+    left: 2%;
 }
 
 .music_player {
@@ -34,17 +34,32 @@
 
 .play_btns {
     position: absolute;
-    top: 5%;
-    left: 12%;
+    top: 17%;
+    left: 2%;
     display: flex;
     flex-direction: row;
-    width: 20%;
+    width: 34%;
+}
+
+.link_btn {
+    width: 109px;
+    height: 51px;
+    border-radius: 7px;
+}
+
+.menu_bar div i{
+    margin-left: 7%;
+    margin-top: 6%;
+}
+
+.menu_bar div i:hover {
+    color: lightblue;
 }
 
 .settings_btns {
     position: absolute;
-    top: 37%;
-    left: 91%;
+    top: 30%;
+    left: 95%;
     width: 6%;
 }
 
@@ -52,14 +67,7 @@
     color: lightblue;
 }
 
-.menu_bar div i{
-    margin-left: 30%;
-    margin-top: 23%;
-}
 
-.menu_bar div i:hover {
-    color: lightblue;
-}
 
 .menu_bar p{
     margin-left: 2%;

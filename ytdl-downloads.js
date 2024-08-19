@@ -16,12 +16,7 @@ const getVideoInfo = async (url) => {
             //listFormats: true,
         });
 
-        console.log(videoInfo.title);
-        console.log("-".repeat(50));
-        console.log(videoInfo.thumbnail);
-        console.log("-".repeat(50));
-        console.log(videoInfo.description);
-        console.log("-".repeat(50));
+        //console.log(videoInfo);
 
         return {
             title: videoInfo.title,
@@ -58,22 +53,22 @@ const listAudioResolutions = async (url) => {
     }
 };
 
-const downloadVideo = async (url, outputDirectory) => {
+const downloadVideo = async (url, outputDirectory, audio_format) => {
     try {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true
       });
-  
-      console.log(videoInfo[0].title);
+
+      const currentDir = process.cwd();
   
       const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
-      const outputFilePath = path.join(outputDirectory, `${videoTitle}.mp4`);
+      const outputFilePath = `${outputDirectory}/${videoTitle}.${audio_format}`;
   
       console.log(`Downloading video: ${videoTitle}`);
       
       youtubedl(url, {
         output: outputFilePath,
-        format: 'mp3'
+        format: 'best'
       }).then((output) => {
         console.log(output)
         console.log(`Video downloaded successfully to ${outputFilePath}`);
@@ -85,7 +80,7 @@ const downloadVideo = async (url, outputDirectory) => {
     }
 };
 
-const downloadPlaylist = async (playlistUrl, outputDirectory) => {
+const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format) => {
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
@@ -114,22 +109,22 @@ const downloadPlaylist = async (playlistUrl, outputDirectory) => {
           });
   
           const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
-          const outputFilePath = path.join(videoOutputDir, `${videoTitle}.mp4`);
+          const outputFilePath = path.join(videoOutputDir, `${videoTitle}.${audio_format}`);
   
           console.log(`Downloading video: ${videoTitle}`);
           
           const promise = youtubedl(videoUrl, {
               output: outputFilePath,
-              format: 'mp4'
+              format: 'best'
           });
           
           const result = await logger(promise, `Obtaining ${videoTitle}`);
   
           console.log(result);
-          // await youtubedl(videoUrl, {
-          //   output: outputFilePath,
-          //   format: 'mp4'
-          // });
+          await youtubedl(videoUrl, {
+            output: outputFilePath,
+            format: 'best'
+          });
   
           console.log(`Video downloaded successfully to ${outputFilePath}`);
         } catch (videoError) {
@@ -202,6 +197,8 @@ const manageMetadata = async (inputFile, outputFile, metadata) => {
     console.error('Error managing metadata:', error);
   }
 };
+
+
 
 
 module.exports = { downloadVideo, downloadPlaylist, getVideoInfo, listAudioResolutions, manageMetadata };
