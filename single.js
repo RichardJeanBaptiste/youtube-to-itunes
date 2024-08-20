@@ -11,7 +11,13 @@ const youtubedl = require('youtube-dl-exec');
 //getVideoInfo("https://www.youtube.com/watch?v=SZs3JRSmazY");
 
 //downloadVideo("https://www.youtube.com/watch?v=SZs3JRSmazY", "audio", "mp3");
-downloadPlaylist("https://www.youtube.com/playlist?list=PLH4RHB93Zoe_ydTTQ-TFnuPu0xs8ffwDj", "playlists", "m4a");
+let x = "abc"
+x = "abc" + "";
+const metadata = {
+    Album: "abc",
+    Artist: "Dave",
+}
+downloadPlaylist("https://www.youtube.com/playlist?list=PLH4RHB93Zoe_ydTTQ-TFnuPu0xs8ffwDj", "playlists", "mp3", metadata);
 
 // const videoUrl = 'https://www.youtube.com/watch?v=kO4_0oxZTLY';
 

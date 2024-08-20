@@ -15,18 +15,7 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('index.html');
 
-  let popupWindow = new BrowserWindow({
-    width: 700,
-    height: 500,
-    parent: mainWindow,  // Make the main window the parent
-    modal: false,         // Make the popup modal (disables main window)
-    closable: true,
-    resizable: true,
-    webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, './preload.js')
-    }
-  });
+  
 
   ipcMain.handle('quick-download', async (event, link) => {
       console.log("main process: Checking Link");
@@ -36,6 +25,19 @@ const createWindow = () => {
       if(videoRegex.test(link)) {
         downloadVideo(link, 'audio', 'mp3');
       } else if(playlistRegex.test(link)){
+
+        let popupWindow = new BrowserWindow({
+          width: 700,
+          height: 500,
+          parent: mainWindow,  // Make the main window the parent
+          modal: false,         // Make the popup modal (disables main window)
+          closable: true,
+          resizable: true,
+          webPreferences: {
+            nodeIntegration: true,
+            preload: path.join(__dirname, './preload.js')
+          }
+        });
        
         popupWindow.loadFile('./Popup/popup.html');
         popupWindow.webContents.on('did-finish-load', async () => {
@@ -50,12 +52,9 @@ const createWindow = () => {
   })
 
   ipcMain.handle('download-playlist', async (event, metadata) => {
-      console.log(`Main Process - Download Playlist:\n ${"===".repeat(30)}`);
-      console.log(metadata);
-      
-      popupWindow.close();
-      downloadPlaylist(metadata.link, 'playlists', 'mp3');
-
+      //console.log(`Main Process - Download Playlist:\n ${"===".repeat(30)}`);
+      //console.log(metadata);
+      downloadPlaylist(metadata.link, 'playlists', 'mp3', metadata);
   });
 
  

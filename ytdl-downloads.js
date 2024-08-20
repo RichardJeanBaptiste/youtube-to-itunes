@@ -7,6 +7,8 @@ const { exec } = require('child_process');
 const logger = require('progress-estimator')();
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 
+ffmpeg.setFfmpegPath(ffmpegPath);
+
 const getVideoInfo = async (url) => {
 
     console.log("=".repeat(100));
@@ -80,16 +82,20 @@ const downloadVideo = async (url, outputDirectory, audio_format) => {
     }
 };
 
-const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format) => {
+const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format, metadata) => {
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
         flatPlaylist: true
       });
-  
+
       const { title, entries } = playlistInfo;
       console.log(`Downloading playlist: ${title}`);
       console.log(`Number of videos: ${entries.length}`);
+      
+      // Final Final Path - Store File With Edited Metadata
+      const updatedFilePath = `./updated/${metadata.Album}`;
+      console.log(`UpdatedFilePath: ${updatedFilePath}`);
   
       if (!fs.existsSync(outputDirectory)){
         fs.mkdirSync(outputDirectory);
@@ -111,7 +117,7 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format) => {
           const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
           const outputFilePath = path.join(videoOutputDir, `${videoTitle}.${audio_format}`);
   
-          console.log(`Downloading video: ${videoTitle}`);
+          //console.log(`Downloading video: ${videoTitle}`);
           
           const promise = youtubedl(videoUrl, {
               output: outputFilePath,
@@ -120,13 +126,20 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format) => {
           
           const result = await logger(promise, `Obtaining ${videoTitle}`);
   
-          console.log(result);
+          //console.log(result);
+          
           await youtubedl(videoUrl, {
             output: outputFilePath,
             format: 'best'
           });
-  
-          console.log(`Video downloaded successfully to ${outputFilePath}`);
+
+          
+          if(!fs.existsSync(updatedFilePath)){
+            fs.mkdirSync(updatedFilePath);
+          }
+        
+          manageMetadata(outputFilePath, `${updatedFilePath}/${videoTitle}.${audio_format}`, metadata);
+          console.log(`Video downloaded successfully to ${updatedFilePath}`);
         } catch (videoError) {
           console.error(`Error downloading video ${videoUrl}:`, videoError);
         }
@@ -136,9 +149,12 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format) => {
     }
 };
 
-ffmpeg.setFfmpegPath(ffmpegPath);
+
 
 const getMetadata = (filePath) => {
+
+  console.log(`Metadata filepath: ${filePath}`);
+
   return new Promise((resolve, reject) => {
     exec(`${ffmpegPath} -i "${filePath}" -f ffmetadata -`, (error, stdout, stderr) => {
       if (error) {
@@ -150,12 +166,19 @@ const getMetadata = (filePath) => {
   });
 };
 
+
 const updateMetadata = (inputFile, outputFile, newMetadata) => {
+
+  console.log(`updateMetadata: input file: ${inputFile} - output file: ${outputFile}`);
+
   return new Promise((resolve, reject) => {
     const outputOptions = [];
     Object.entries(newMetadata).forEach(([key, value]) => {
+      value = value + "";
       outputOptions.push(`-metadata`, `${key}=${value}`);
     });
+
+    
 
     ffmpeg(inputFile)
       .outputOptions(outputOptions)
@@ -166,8 +189,12 @@ const updateMetadata = (inputFile, outputFile, newMetadata) => {
 };
 
 const manageMetadata = async (inputFile, outputFile, metadata) => {
+
+  console.log("Manage Metadata");
   try {
-    const metadataOutput = await getMetadata(inputFile);
+
+
+    const metadataOutput = await getMetadata(decodeURI(inputFile));
     const metadataLines = metadataOutput.split('\n');
     const existingMetadata = {};
 

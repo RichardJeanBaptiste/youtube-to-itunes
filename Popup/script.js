@@ -1,7 +1,7 @@
 let currentLink;
 
 window.electronAPI.receive('currentLink', (message) => {
-    console.log(message); // Prints 'Hello from the main process'
+    //console.log(message); 
     document.getElementById("link").innerHTML = message;
 });
 
@@ -10,6 +10,8 @@ window.electronAPI.receive('videoInfo', (info, link) => {
     currentLink = link;
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
+    document.getElementById("display_loading").style.display = "none";
+    document.getElementById("display_window").style.display = "block";
 })
 
 document.getElementById("submit_btn").addEventListener('click', async () => {
@@ -21,13 +23,15 @@ document.getElementById("submit_btn").addEventListener('click', async () => {
     } else {
         let metadata = {
             link: currentLink,
-            title : document.getElementById("album_name").value,
-            artist: document.getElementById("artist_name").value,
+            Album : document.getElementById("album_name").value,
+            Artist: document.getElementById("artist_name").value,
             thumbnail: document.getElementById("thumbnail").value
         }
-    
-        console.log(metadata);
+        //console.log(metadata);
         window.electronAPI.downloadPlaylist(metadata);
+
+        // let window = remote.getCurrentWindow(); // Get the current window (the popup)
+        // window.close();
     }
     
     

@@ -11,16 +11,23 @@
 <body style="height: 100vh;">
     
     <h4>Playlist Window</h4>
-    <p><span>Title: </span><p id="title">""</p></p>
-    <p><span>Description: </span><p id="desc">Loading.....</p></p>
+    
+    <div id="display_loading">
+        <p>Loading......</p>
+    </div>
 
-    <form id="metadata" style="display: flex; flex-direction: column;" action="#">
-        <p id="file_location">file location....</p>
-        <input id="album_name" type="text" placeholder="Album Name" required/>
-        <input id="artist_name" type="text" placeholder="Artist Name" required/>
-        <input id="thumbnail" type="text" placeholder="Image Link"/>
-        <button id="submit_btn">Download</button>
-    </form>
+    <div id="display_window" style="display: none;">
+        <p><span>Title: </span><p id="title">""</p></p>
+        <p><span>Description: </span><p id="desc">Loading.....</p></p>
+
+        <form id="metadata" style="display: flex; flex-direction: column;" action="#">
+            <p id="file_location">file location....</p>
+            <input id="album_name" type="text" placeholder="Album Name" required/>
+            <input id="artist_name" type="text" placeholder="Artist Name" required/>
+            <input id="thumbnail" type="text" placeholder="Image Link"/>
+            <button id="submit_btn">Download</button>
+        </form>
+    </div>
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="./script.js"></script>
