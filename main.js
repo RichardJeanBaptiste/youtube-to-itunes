@@ -2,8 +2,10 @@ const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('node:path');
 const { getVideoInfo, downloadVideo, downloadPlaylist } = require('./ytdl-downloads.js');
 
+
 const createWindow = () => {
-  // Create the browser window.
+
+    // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 750,
     height: 800,
@@ -11,9 +13,38 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   })
-
+  
   // and load the index.html of the app.
   mainWindow.loadFile('index.html');
+
+  
+
+  //popupWindow.close();
+
+  const openPopupWindow = (link) => {
+    let popupWindow = new BrowserWindow({
+      width: 700,
+      height: 500,
+      //parent: mainWindow,  // Make the main window the parent
+      modal: false,         // Make the popup modal (disables main window)
+      closable: true,
+      resizable: true,
+      show: false,
+      webPreferences: {
+        nodeIntegration: true,
+        preload: path.join(__dirname, './preload.js')
+      }
+    });
+
+    popupWindow.loadFile('./Popup/popup.html');
+      popupWindow.show();
+      popupWindow.webContents.on('did-finish-load', async () => {
+        let info = await getVideoInfo(link);
+        //console.log(info);
+        popupWindow.webContents.send('videoInfo', info, link);
+        //popupWindow.webContents.openDevTools();
+    })
+  }
 
   
 
@@ -25,27 +56,9 @@ const createWindow = () => {
       if(videoRegex.test(link)) {
         downloadVideo(link, 'audio', 'mp3');
       } else if(playlistRegex.test(link)){
-
-        let popupWindow = new BrowserWindow({
-          width: 700,
-          height: 500,
-          parent: mainWindow,  // Make the main window the parent
-          modal: false,         // Make the popup modal (disables main window)
-          closable: true,
-          resizable: true,
-          webPreferences: {
-            nodeIntegration: true,
-            preload: path.join(__dirname, './preload.js')
-          }
-        });
-       
-        popupWindow.loadFile('./Popup/popup.html');
-        popupWindow.webContents.on('did-finish-load', async () => {
-          let info = await getVideoInfo(link);
-          //console.log(info);
-          popupWindow.webContents.send('videoInfo', info, link);
-          //popupWindow.webContents.openDevTools();
-        })
+        
+        openPopupWindow(link);
+        
       } else {
         console.log("Invalid Link");
       }
@@ -54,7 +67,13 @@ const createWindow = () => {
   ipcMain.handle('download-playlist', async (event, metadata) => {
       //console.log(`Main Process - Download Playlist:\n ${"===".repeat(30)}`);
       //console.log(metadata);
-      downloadPlaylist(metadata.link, 'playlists', 'mp3', metadata);
+      let x = {
+        Album: metadata.Album,
+        Artist: metadata.Artist
+      }
+
+      downloadPlaylist(metadata.link, 'playlists', 'mp3', x);
+      //popupWindow.hide();
   });
 
  
@@ -64,7 +83,8 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+
+  createWindow();
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the

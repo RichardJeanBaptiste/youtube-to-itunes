@@ -21,19 +21,27 @@ document.getElementById("submit_btn").addEventListener('click', async () => {
     if(currentLink === undefined){
         alert("Item Loading.....");
     } else {
+
+        /**
+         * Metadata List
+         *  Album Artist
+         *  Composer
+         *  Year
+         *  Comments
+         *  Genre      
+         */
+        
         let metadata = {
             link: currentLink,
             Album : document.getElementById("album_name").value,
             Artist: document.getElementById("artist_name").value,
-            thumbnail: document.getElementById("thumbnail").value
         }
         //console.log(metadata);
         window.electronAPI.downloadPlaylist(metadata);
 
         // let window = remote.getCurrentWindow(); // Get the current window (the popup)
         // window.close();
-    }
-    
-    
-    
+        
+        
+    }    
 })

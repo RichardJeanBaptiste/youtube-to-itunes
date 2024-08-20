@@ -153,8 +153,6 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format, meta
 
 const getMetadata = (filePath) => {
 
-  console.log(`Metadata filepath: ${filePath}`);
-
   return new Promise((resolve, reject) => {
     exec(`${ffmpegPath} -i "${filePath}" -f ffmetadata -`, (error, stdout, stderr) => {
       if (error) {
@@ -174,11 +172,10 @@ const updateMetadata = (inputFile, outputFile, newMetadata) => {
   return new Promise((resolve, reject) => {
     const outputOptions = [];
     Object.entries(newMetadata).forEach(([key, value]) => {
-      value = value + "";
-      outputOptions.push(`-metadata`, `${key}=${value}`);
-    });
 
-    
+      let valueEdit = " " + value + " ";
+      outputOptions.push(`-metadata`, `${key}=${valueEdit}`);
+    });
 
     ffmpeg(inputFile)
       .outputOptions(outputOptions)
@@ -190,9 +187,7 @@ const updateMetadata = (inputFile, outputFile, newMetadata) => {
 
 const manageMetadata = async (inputFile, outputFile, metadata) => {
 
-  console.log("Manage Metadata");
   try {
-
 
     const metadataOutput = await getMetadata(decodeURI(inputFile));
     const metadataLines = metadataOutput.split('\n');
@@ -220,6 +215,7 @@ const manageMetadata = async (inputFile, outputFile, metadata) => {
     } else {
       console.log('No new metadata to add');
     }
+    
   } catch (error) {
     console.error('Error managing metadata:', error);
   }
