@@ -1,3 +1,11 @@
+/**
+ * Test Playlists
+ *  An ideal for living - https://www.youtube.com/playlist?list=PLK2zhq9oy0K4yxwMmBPsXQ3NvaQSxw6rY
+ *  Jar Of Flies - https://www.youtube.com/playlist?list=PL6vwnon3sINptjofzjbPaISZByQoecamo
+ *  Over And Out - https://www.youtube.com/playlist?list=PLPgY7pnyXWLe-CuwuwMyWz0TDel77SsU0
+ *  Blood Bank - https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7
+ */
+
 let currentLink;
 
 window.electronAPI.receive('currentLink', (message) => {
@@ -14,9 +22,14 @@ window.electronAPI.receive('videoInfo', (info, link) => {
     document.getElementById("display_window").style.display = "block";
 })
 
-document.getElementById("submit_btn").addEventListener('click', async () => {
+document.getElementById("file_location").addEventListener('click', async () => {
+    let x = await window.electronAPI.chooseDir();
+    document.getElementById("loc").innerHTML = x;    
+})
 
-    console.log(currentLink);
+document.getElementById("submit_btn").addEventListener('click', async (e) => {
+
+    
 
     if(currentLink === undefined){
         alert("Item Loading.....");
@@ -30,18 +43,29 @@ document.getElementById("submit_btn").addEventListener('click', async () => {
          *  Comments
          *  Genre      
          */
+
+        let albumName = document.getElementById("album_name").value;
+        let artistName = document.getElementById("artist_name").value;
+
+        if(!albumName || !artistName){
+            e.preventDefault();
+            alert('Please fill in both the Album Name and Artist Name fields.');
+            return false;
+        }
         
         let metadata = {
             link: currentLink,
-            Album : document.getElementById("album_name").value,
-            Artist: document.getElementById("artist_name").value,
+            file_location: document.getElementById("loc").innerHTML,
+            Album : albumName,
+            Artist: artistName,
         }
+
         //console.log(metadata);
         window.electronAPI.downloadPlaylist(metadata);
 
-        // let window = remote.getCurrentWindow(); // Get the current window (the popup)
-        // window.close();
-        
+        //let win = remote.getCurrentWindow(); // Get the current window (the popup)
+        //win.close();
+        window.close();
         
     }    
 })

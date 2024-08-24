@@ -20,12 +20,16 @@
         <p><span>Title: </span><p id="title">""</p></p>
         <p><span>Description: </span><p id="desc">Loading.....</p></p>
 
+        <button id="file_location">File Location</button>
+        <p id="loc"></p>
+
         <form id="metadata" style="display: flex; flex-direction: column;" action="#">
-            <p id="file_location">file location....</p>
             <input id="album_name" type="text" placeholder="Album Name" required/>
             <input id="artist_name" type="text" placeholder="Artist Name" required/>
-            <input id="thumbnail" type="text" placeholder="Image Link"/>
-            <button id="submit_btn">Download</button>
+            <input id="cover_art" type="text" placeholder="Image Link"/>
+            <input id="genre" type="text" placeholder="Make Radio Button" disabled/>
+            <textarea id="comments" rows="3" cols="5" placeholder="comments"></textarea>
+            <button id="submit_btn" type="submit">Download</button>
         </form>
     </div>
    

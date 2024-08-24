@@ -12,5 +12,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
     downloadPlaylist: (metadata) => {
         ipcRenderer.invoke('download-playlist', metadata);
+    },
+    chooseDir: async () => {
+        let result = await ipcRenderer.invoke('choose-directory');
+        console.log(result);
+        return result;
     }
 })

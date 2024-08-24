@@ -7,6 +7,8 @@ const { exec } = require('child_process');
 const logger = require('progress-estimator')();
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 
+
+
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const getVideoInfo = async (url) => {
@@ -82,7 +84,7 @@ const downloadVideo = async (url, outputDirectory, audio_format) => {
     }
 };
 
-const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format, metadata) => {
+const downloadPlaylist = async (playlistUrl, updateDirectory ,outputDirectory,audio_format, metadata) => {
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
@@ -94,7 +96,7 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format, meta
       console.log(`Number of videos: ${entries.length}`);
       
       // Final Final Path - Store File With Edited Metadata
-      const updatedFilePath = `./updated/${metadata.Album}`;
+      const updatedFilePath = `${updateDirectory}/${metadata.Album}`;
       console.log(`UpdatedFilePath: ${updatedFilePath}`);
   
       if (!fs.existsSync(outputDirectory)){
@@ -144,6 +146,7 @@ const downloadPlaylist = async (playlistUrl, outputDirectory, audio_format, meta
           console.error(`Error downloading video ${videoUrl}:`, videoError);
         }
       }
+      console.log("pldl...finished");
     } catch (playlistError) {
       console.error('Error fetching playlist info:', playlistError);
     }

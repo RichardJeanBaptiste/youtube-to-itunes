@@ -1,6 +1,8 @@
-const { app, BrowserWindow, ipcMain, webContents } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents, dialog } = require('electron');
+const fs = require('fs');
 const path = require('node:path');
 const { getVideoInfo, downloadVideo, downloadPlaylist } = require('./ytdl-downloads.js');
+const PopupWindow = require('./classes.js');
 
 
 const createWindow = () => {
@@ -17,34 +19,40 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('index.html');
 
-  
+  // const openPopupWindow = (link) => {
+  //   let popupWindow = new BrowserWindow({
+  //     width: 700,
+  //     height: 500,
+  //     //parent: mainWindow,  // Make the main window the parent
+  //     modal: false,         // Make the popup modal (disables main window)
+  //     closable: true,
+  //     resizable: true,
+  //     show: false,
+  //     webPreferences: {
+  //       nodeIntegration: true,
+  //       preload: path.join(__dirname, './preload.js')
+  //     }
+  //   });
 
-  //popupWindow.close();
+  //   popupWindow.loadFile('./Popup/popup.html');
+  //     popupWindow.show();
+  //     popupWindow.webContents.on('did-finish-load', async () => {
+  //       let info = await getVideoInfo(link);
+  //       //console.log(info);
+  //       popupWindow.webContents.send('videoInfo', info, link);
+  //       //popupWindow.webContents.openDevTools();
+  //   })    
+  // }
 
-  const openPopupWindow = (link) => {
-    let popupWindow = new BrowserWindow({
-      width: 700,
-      height: 500,
-      //parent: mainWindow,  // Make the main window the parent
-      modal: false,         // Make the popup modal (disables main window)
-      closable: true,
-      resizable: true,
-      show: false,
-      webPreferences: {
-        nodeIntegration: true,
-        preload: path.join(__dirname, './preload.js')
-      }
+  ipcMain.handle('choose-directory', async (event) => {
+
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory']
     });
 
-    popupWindow.loadFile('./Popup/popup.html');
-      popupWindow.show();
-      popupWindow.webContents.on('did-finish-load', async () => {
-        let info = await getVideoInfo(link);
-        //console.log(info);
-        popupWindow.webContents.send('videoInfo', info, link);
-        //popupWindow.webContents.openDevTools();
-    })
-  }
+    return result.filePaths[0];
+    
+  })
 
   
 
@@ -57,8 +65,9 @@ const createWindow = () => {
         downloadVideo(link, 'audio', 'mp3');
       } else if(playlistRegex.test(link)){
         
-        openPopupWindow(link);
-        
+        const popup = new PopupWindow(link);
+        popup.show();
+        //openPopupWindow(link);
       } else {
         console.log("Invalid Link");
       }
@@ -66,22 +75,20 @@ const createWindow = () => {
 
   ipcMain.handle('download-playlist', async (event, metadata) => {
       //console.log(`Main Process - Download Playlist:\n ${"===".repeat(30)}`);
-      //console.log(metadata);
+      console.log(metadata);
       let x = {
         Album: metadata.Album,
         Artist: metadata.Artist
       }
 
-      downloadPlaylist(metadata.link, 'playlists', 'mp3', x);
+      downloadPlaylist(metadata.link, metadata.file_location,'playlists', 'mp3', x);
       //popupWindow.hide();
   });
 
  
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
 app.whenReady().then(() => {
 
   createWindow();
