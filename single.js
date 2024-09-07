@@ -1,7 +1,7 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 const { exec } = require('child_process');
-const { getVideoInfo, listAudioResolutions, downloadVideo, downloadPlaylist, manageMetadata } = require('./ytdl-downloads'); 
+const { getVideoInfo, listAudioResolutions, downloadVideo, downloadPlaylist, manageMetadata, deleteFolder } = require('./ytdl-downloads'); 
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 const youtubedl = require('youtube-dl-exec');
 const path = require('path');
@@ -37,3 +37,5 @@ const metadata = {
 // });
 
 //manageMetadata('test.mp3','update.mp3', metadata);
+
+deleteFolder("Jay-Z - 444 (FULL ALBUM)");

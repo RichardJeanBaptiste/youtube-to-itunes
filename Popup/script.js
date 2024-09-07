@@ -9,7 +9,6 @@
 let currentLink;
 
 window.electronAPI.receive('currentLink', (message) => {
-    //console.log(message); 
     document.getElementById("link").innerHTML = message;
 });
 
@@ -28,8 +27,6 @@ document.getElementById("file_location").addEventListener('click', async () => {
 })
 
 document.getElementById("submit_btn").addEventListener('click', async (e) => {
-
-    
 
     if(currentLink === undefined){
         alert("Item Loading.....");
@@ -62,9 +59,6 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
         //console.log(metadata);
         window.electronAPI.downloadPlaylist(metadata);
-
-        //let win = remote.getCurrentWindow(); // Get the current window (the popup)
-        //win.close();
         window.close();
         
     }    

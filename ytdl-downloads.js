@@ -8,6 +8,14 @@ const logger = require('progress-estimator')();
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 
 
+/**
+ * Test Playlists
+ *  An ideal for living - https://www.youtube.com/playlist?list=PLK2zhq9oy0K4yxwMmBPsXQ3NvaQSxw6rY
+ *  Jar Of Flies - https://www.youtube.com/playlist?list=PL6vwnon3sINptjofzjbPaISZByQoecamo
+ *  Over And Out - https://www.youtube.com/playlist?list=PLPgY7pnyXWLe-CuwuwMyWz0TDel77SsU0
+ *  Blood Bank - https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7
+ */
+
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -84,14 +92,17 @@ const downloadVideo = async (url, outputDirectory, audio_format) => {
     }
 };
 
-const downloadPlaylist = async (playlistUrl, updateDirectory ,outputDirectory,audio_format, metadata) => {
+const downloadPlaylist = async (playlistUrl, updateDirectory, outputDirectory, audio_format, metadata) => {
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
         flatPlaylist: true
       });
 
+      const promises = [];
+
       const { title, entries } = playlistInfo;
+      let deleteFileDir;
       console.log(`Downloading playlist: ${title}`);
       console.log(`Number of videos: ${entries.length}`);
       
@@ -118,8 +129,6 @@ const downloadPlaylist = async (playlistUrl, updateDirectory ,outputDirectory,au
   
           const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
           const outputFilePath = path.join(videoOutputDir, `${videoTitle}.${audio_format}`);
-  
-          //console.log(`Downloading video: ${videoTitle}`);
           
           const promise = youtubedl(videoUrl, {
               output: outputFilePath,
@@ -127,7 +136,6 @@ const downloadPlaylist = async (playlistUrl, updateDirectory ,outputDirectory,au
           });
           
           const result = await logger(promise, `Obtaining ${videoTitle}`);
-  
           //console.log(result);
           
           await youtubedl(videoUrl, {
@@ -140,13 +148,22 @@ const downloadPlaylist = async (playlistUrl, updateDirectory ,outputDirectory,au
             fs.mkdirSync(updatedFilePath);
           }
         
-          manageMetadata(outputFilePath, `${updatedFilePath}/${videoTitle}.${audio_format}`, metadata);
+          const metadataPromise = manageMetadata(outputFilePath, path.join(updatedFilePath, `${videoTitle}.${audio_format}`), metadata);
+          //manageMetadata(outputFilePath, `${updatedFilePath}/${videoTitle}.${audio_format}`, metadata);
+          promises.push(metadataPromise);
           console.log(`Video downloaded successfully to ${updatedFilePath}`);
-        } catch (videoError) {
-          console.error(`Error downloading video ${videoUrl}:`, videoError);
+        } catch (err) {
+          if (err.name === 'ChildProcessError') {
+            console.log(`You may have to sign in to confirm you're not a bot: ${videoUrl} ---- ${err}`);
+          } else {
+            console.error(`Error downloading video ${videoUrl}:`, err);
+          } 
         }
       }
-      console.log("pldl...finished");
+
+      await Promise.all(promises);
+      deleteFolder(`${title}`);
+      console.log("Playlist download finished");
     } catch (playlistError) {
       console.error('Error fetching playlist info:', playlistError);
     }
@@ -224,7 +241,22 @@ const manageMetadata = async (inputFile, outputFile, metadata) => {
   }
 };
 
+const deleteFolder = (temp) => {
+  try {
+    const dir = path.join(__dirname, 'playlists', temp);
+
+    fs.rm(dir, {recursive: true, force: true}, (err) => {
+      if (err) {
+        return console.error(`Error deleting directory: ${err.message}`);
+      }
+        console.log('Directory deleted successfully!');
+    }); 
+  } catch (error) {
+    console.log(`Error Occured When Deleting files:\n${error}`);
+  }
+}
 
 
 
-module.exports = { downloadVideo, downloadPlaylist, getVideoInfo, listAudioResolutions, manageMetadata };
+
+module.exports = { downloadVideo, downloadPlaylist, getVideoInfo, listAudioResolutions, manageMetadata, deleteFolder};
