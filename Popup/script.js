@@ -24,7 +24,11 @@ window.electronAPI.receive('videoInfo', (info, link) => {
 document.getElementById("file_location").addEventListener('click', async () => {
     let x = await window.electronAPI.chooseDir();
     document.getElementById("loc").innerHTML = x;    
-})
+});
+
+// document.getElementById("test").addEventListener('click', async () => {
+//     console.log(document.getElementById("genre").value);
+// })
 
 document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
@@ -43,6 +47,7 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
         let albumName = document.getElementById("album_name").value;
         let artistName = document.getElementById("artist_name").value;
+        let Genre = document.getElementById("genre").value;
 
         if(!albumName || !artistName){
             e.preventDefault();
@@ -55,6 +60,7 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
             file_location: document.getElementById("loc").innerHTML,
             Album : albumName,
             Artist: artistName,
+            genre: Genre,
         }
 
         //console.log(metadata);

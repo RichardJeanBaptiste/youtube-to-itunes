@@ -25,8 +25,7 @@ const createWindow = () => {
       properties: ['openDirectory']
     });
 
-    return result.filePaths[0];
-    
+    return result.filePaths[0];   
   })
 
   
@@ -51,8 +50,11 @@ const createWindow = () => {
 
       let x = {
         Album: metadata.Album,
-        Artist: metadata.Artist
+        Artist: metadata.Artist,
+        genre: metadata.genre
       }
+
+      console.log(metadata);
 
       downloadPlaylist(metadata.link, metadata.file_location,'playlists', 'mp3', x);
   });

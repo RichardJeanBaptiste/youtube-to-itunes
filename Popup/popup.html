@@ -27,7 +27,24 @@
             <input id="album_name" type="text" placeholder="Album Name" required/>
             <input id="artist_name" type="text" placeholder="Artist Name" required/>
             <input id="cover_art" type="text" placeholder="Image Link"/>
-            <input id="genre" type="text" placeholder="Make Radio Button" disabled/>
+            <label for="genre">Genre: </label>
+                <select id="genre" name="genre">
+                    <option value="HipHop/Rap" selected>HipHop/Rap</option>
+                    <option value="R&B">R&B</option>
+                    <option value="Rock">Rock</option>
+                    <option value="Pop">Pop</option>
+                    <option value="Alternative">Alternative</option>
+                    <option value="Books & Spoken">Books & Spoken</option>
+                    <option value="Children's music">Children's music</option>
+                    <option value="Classical">Classical</option>
+                    <option value="Country">Country</option>
+                    <option value="Dance">Dance</option>
+                    <option value="Easy Listening">Easy Listening</option>
+                    <option value="Electronic">Electronic</option>
+                    <option value="Folk">Folk</option>
+                    <option value="Holiday">Holiday</option>
+                    <option value="House">House</option>
+                </select>
             <textarea id="comments" rows="3" cols="5" placeholder="comments"></textarea>
             <button id="submit_btn" type="submit">Download</button>
         </form>
