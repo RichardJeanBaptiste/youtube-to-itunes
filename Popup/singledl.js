@@ -1,32 +1,25 @@
 /**
- * Test Playlists
- *  An ideal for living - https://www.youtube.com/playlist?list=PLK2zhq9oy0K4yxwMmBPsXQ3NvaQSxw6rY
- *  Jar Of Flies - https://www.youtube.com/playlist?list=PL6vwnon3sINptjofzjbPaISZByQoecamo
- *  Over And Out - https://www.youtube.com/playlist?list=PLPgY7pnyXWLe-CuwuwMyWz0TDel77SsU0
- *  Blood Bank - https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7
  * 
+ * Test Single Link
+ * 
+ *  sukuna edit - https://www.youtube.com/watch?v=FzA_UaajqZY
  */
 
-let currentLink;
-
-window.electronAPI.receive('currentLink', (message) => {
-    document.getElementById("link").innerHTML = message;
-});
 
 window.electronAPI.receive('videoInfo', (info, link) => {
-    //console.log(info);
+    console.log(info);
     currentLink = link;
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
+    document.getElementById("thumbnail").src = info.thumbnail;
     document.getElementById("display_loading").style.display = "none";
     document.getElementById("display_window").style.display = "block";
-})
+});
 
 document.getElementById("file_location").addEventListener('click', async () => {
     let x = await window.electronAPI.chooseDir();
     document.getElementById("loc").innerHTML = x;    
 });
-
 
 document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
@@ -65,9 +58,8 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
             comments: comments
         }
 
-        //console.log(metadata);
-        window.electronAPI.downloadPlaylist(metadata);
+        window.electronAPI.downloadSingle(metadata);
         window.close();
         
     }    
-})
+});

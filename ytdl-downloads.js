@@ -65,17 +65,15 @@ const listAudioResolutions = async (url) => {
     }
 };
 
-const downloadVideo = async (url, outputDirectory, audio_format) => {
+const quickSingleDownload = async (url, outputDirectory, audio_format) => {
     try {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true
       });
 
-      const currentDir = process.cwd();
-  
       const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
       const outputFilePath = `${outputDirectory}/${videoTitle}.${audio_format}`;
-  
+
       console.log(`Downloading video: ${videoTitle}`);
       
       youtubedl(url, {
@@ -90,9 +88,40 @@ const downloadVideo = async (url, outputDirectory, audio_format) => {
     } catch (error) {
       console.error('Error fetching video info:', error);
     }
+}
+
+const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
+    try {
+      const videoInfo = await youtubedl(url, {
+        dumpSingleJson: true
+      });
+  
+      const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
+      const videoOutputDir = path.join('playlists', videoTitle);
+      const outputFilePath = `${outputDirectory}/${videoTitle}.${audio_format}`;
+
+  
+    //   console.log(`Downloading video: ${videoTitle}`);
+      
+      await youtubedl(url, {
+        output: videoOutputDir,
+        format: 'best'
+      }).then((output) => {
+        console.log(output)
+        console.log(`Video downloaded successfully to ${videoOutputDir}`);
+      }).catch(err => {
+        console.error('Error downloading video:', err);
+      });
+
+      const audioPromise = manageMetadata(videoOutputDir, outputFilePath, metadata);
+      await Promise.resolve(audioPromise);
+      deleteFile(videoOutputDir);
+    } catch (error) {
+      console.error('Error fetching video info:', error);
+    }
 };
 
-const downloadPlaylist = async (playlistUrl, updateDirectory, outputDirectory, audio_format, metadata) => {
+const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, metadata) => {
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
@@ -102,7 +131,6 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, outputDirectory, a
       const promises = [];
 
       const { title, entries } = playlistInfo;
-      let deleteFileDir;
       console.log(`Downloading playlist: ${title}`);
       console.log(`Number of videos: ${entries.length}`);
       
@@ -110,13 +138,13 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, outputDirectory, a
       const updatedFilePath = `${updateDirectory}/${metadata.Album}`;
       console.log(`UpdatedFilePath: ${updatedFilePath}`);
   
-      if (!fs.existsSync(outputDirectory)){
-        fs.mkdirSync(outputDirectory);
+      if (!fs.existsSync('playlists')){
+        fs.mkdirSync('playlists');
       }
   
       for (const entry of entries) {
         const videoUrl = `https://www.youtube.com/watch?v=${entry.id}`;
-        const videoOutputDir = path.join(outputDirectory, title.replace(/[\/\\:*?"<>|]/g, ''));
+        const videoOutputDir = path.join('playlists', title.replace(/[\/\\:*?"<>|]/g, ''));
   
         if (!fs.existsSync(videoOutputDir)){
           fs.mkdirSync(videoOutputDir);
@@ -256,7 +284,22 @@ const deleteFolder = (temp) => {
   }
 }
 
+const deleteFile = (temp) => {
+  try {
+    const filePath = path.join(__dirname, temp);
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        return console.error(`Error deleting file: ${err.message}`);
+      }
+      console.log('File deleted successfully!');
+    }); 
+  } catch (error) {
+    console.log(`Error occurred when deleting the file:\n${error}`);
+  }
+};
 
 
 
-module.exports = { downloadVideo, downloadPlaylist, getVideoInfo, listAudioResolutions, manageMetadata, deleteFolder};
+
+module.exports = { quickSingleDownload, singleDownload, downloadPlaylist, getVideoInfo, listAudioResolutions, manageMetadata, deleteFolder, deleteFile};

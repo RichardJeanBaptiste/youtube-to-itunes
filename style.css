@@ -67,14 +67,7 @@
     color: lightblue;
 }
 
-
-
 .menu_bar p{
     margin-left: 2%;
     cursor: pointer;
 }
-
-.menu_bar p:hover {
-    background-color: rgba(173, 216, 230, 0.5);
-}
-

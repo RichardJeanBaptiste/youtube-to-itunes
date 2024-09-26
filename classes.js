@@ -4,7 +4,7 @@ const { getVideoInfo } = require('./ytdl-downloads.js');
 
 
 class PopupWindow {
-    constructor(link) {
+    constructor(link, isPlaylist) {
         this.window = new BrowserWindow({
             width: 700,
             height: 500,
@@ -18,10 +18,17 @@ class PopupWindow {
             }
         });
 
-        this.window.loadFile('./Popup/popup.html');
+        
+
+        if(isPlaylist){
+            this.window.loadFile('./Popup/popup.html');
+        } else {
+            this.window.loadFile('./Popup/single.html');
+        }
 
         this.window.webContents.on('did-finish-load', async () => {
             let info = await getVideoInfo(link);
+            console.log(info);
             this.window.webContents.send('videoInfo', info, link);
         });
 

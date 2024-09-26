@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     quickDownload: (link) => {
         ipcRenderer.invoke('quick-download', link);
     },
+    downloadSingle: (metadata) => {
+        ipcRenderer.invoke('single-download', metadata);
+    },
     downloadPlaylist: (metadata) => {
         ipcRenderer.invoke('download-playlist', metadata);
     },

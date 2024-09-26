@@ -1,13 +1,23 @@
+/**
+ * 
+ *  TODO LIST
+ * 
+ *    Show Downloads Progress
+ *    Cancel Download
+ *    Music Player
+ *    Change Format After Download
+ *    Quick Download vs Popup settings
+ */
+
+
 const { app, BrowserWindow, ipcMain, webContents, dialog } = require('electron');
 const fs = require('fs');
 const path = require('node:path');
-const { getVideoInfo, downloadVideo, downloadPlaylist } = require('./ytdl-downloads.js');
+const { getVideoInfo, singleDownload, downloadPlaylist } = require('./ytdl-downloads.js');
 const PopupWindow = require('./classes.js');
 
 
 const createWindow = () => {
-
-    // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 750,
     height: 800,
@@ -16,7 +26,6 @@ const createWindow = () => {
     }
   })
   
-  // and load the index.html of the app.
   mainWindow.loadFile('index.html');
 
   ipcMain.handle('choose-directory', async (event) => {
@@ -28,17 +37,19 @@ const createWindow = () => {
     return result.filePaths[0];   
   })
 
-  
 
   ipcMain.handle('quick-download', async (event, link) => {
       const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
       const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com)\/(playlist\?list=)([a-zA-Z0-9_-]+)/;
 
       if(videoRegex.test(link)) {
-        downloadVideo(link, 'audio', 'mp3');
+        //downloadVideo(link, 'audio', 'mp3');
+        const popup = new PopupWindow(link, false);
+        popup.show();
+
       } else if(playlistRegex.test(link)){
         
-        const popup = new PopupWindow(link);
+        const popup = new PopupWindow(link, true);
         popup.show();
         //openPopupWindow(link);
       } else {
@@ -46,17 +57,24 @@ const createWindow = () => {
       }
   })
 
+  ipcMain.handle('single-download', async (event, metadata) => {
+
+    console.log("Single-Download IPC MAIN PROCESS");
+    singleDownload(metadata.link, metadata.file_location, metadata.format);
+  });
+
   ipcMain.handle('download-playlist', async (event, metadata) => {
 
-      let x = {
+      let input = {
         Album: metadata.Album,
         Artist: metadata.Artist,
-        genre: metadata.genre
+        genre: metadata.genre,
+        comments: metadata.comments
       }
 
-      console.log(metadata);
+      //console.log(metadata);
 
-      downloadPlaylist(metadata.link, metadata.file_location,'playlists', 'mp3', x);
+      downloadPlaylist(metadata.link, metadata.file_location, metadata.format, input);
   });
 }
 
