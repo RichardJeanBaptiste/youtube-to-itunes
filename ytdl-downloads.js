@@ -14,6 +14,12 @@ const logger = require('progress-estimator')();
  *  Jar Of Flies - https://www.youtube.com/playlist?list=PL6vwnon3sINptjofzjbPaISZByQoecamo
  *  Over And Out - https://www.youtube.com/playlist?list=PLPgY7pnyXWLe-CuwuwMyWz0TDel77SsU0
  *  Blood Bank - https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7
+ * 
+ * 
+ * Test Single
+ *  naruto - https://www.youtube.com/watch?v=q1kwt2QIzmc
+ *  adele - https://www.youtube.com/watch?v=rYEDA3JcQqw
+ *  shaboozy - https://youtu.be/t7bQwwqW-Hc?list=PL4fGSI1pDJn6O1LS0XSdF3RyO0Rq_LDeI
  */
 
 
@@ -21,20 +27,45 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 
 const getVideoInfo = async (url) => {
 
+    console.log("Getting Video Info");
     console.log("=".repeat(100));
+
+    const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
+    const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com)\/(playlist\?list=)([a-zA-Z0-9_-]+)/;
+
     try {
-        const videoInfo = await youtubedl(url, {
-            dumpSingleJson: true,
-            //listFormats: true,
-        });
 
-        //console.log(videoInfo);
+      const videoInfo = await youtubedl(url, {
+        dumpSingleJson: true,
+        //listFormats: true,
+      });
 
+
+      if(videoRegex.test(url)){
+        //console.log(videoInfo.thumbnail);
         return {
-            title: videoInfo.title,
-            thumbnail: videoInfo.thumbnail,
-            description: videoInfo.description
+          title: videoInfo.title,
+          thumbnail: videoInfo.thumbnail,
+          description: videoInfo.description
         }
+      } else if(playlistRegex.test(url)) {      
+        //console.log(videoInfo.description);
+        return {
+          title: videoInfo.title,
+          thumbnail: videoInfo.thumbnails[0].url,
+          description: videoInfo.description
+        }
+      } else {
+
+        console.log("Not a youtube link:");
+        return {
+          title: videoInfo.title,
+          thumbnail: videoInfo.thumbnail,
+          description: videoInfo.description
+        }
+      }
+        
+        
     } catch (error) {
         console.error('Error fetching video info:', error);
         return error;

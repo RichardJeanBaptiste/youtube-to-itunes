@@ -16,6 +16,10 @@ window.electronAPI.receive('currentLink', (message) => {
 window.electronAPI.receive('videoInfo', (info, link) => {
     //console.log(info);
     currentLink = link;
+
+    if(info.thumbnail != undefined){
+        document.getElementById("thumbnail").src = info.thumbnail;
+    }
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
     document.getElementById("display_loading").style.display = "none";
@@ -26,6 +30,14 @@ document.getElementById("file_location").addEventListener('click', async () => {
     let x = await window.electronAPI.chooseDir();
     document.getElementById("loc").innerHTML = x;    
 });
+
+document.getElementById("clear_btn").addEventListener('click', async () => {
+    document.getElementById("album_name").value = "";
+    document.getElementById("artist_name").value = "";
+    document.getElementById("genre").value = "HipHop/Rap";
+    document.getElementById("format").value = "mp3";
+    document.getElementById("comments").value = "";
+})
 
 
 document.getElementById("submit_btn").addEventListener('click', async (e) => {
