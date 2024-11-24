@@ -122,35 +122,42 @@ const quickSingleDownload = async (url, outputDirectory, audio_format) => {
 }
 
 const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
+
     try {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true
       });
   
       const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
-      const videoOutputDir = path.join('playlists', videoTitle);
+      const videoOutputDir = path.join('playlists', `${videoTitle}.${audio_format}`);
       const outputFilePath = `${outputDirectory}/${videoTitle}.${audio_format}`;
-
-  
-    //   console.log(`Downloading video: ${videoTitle}`);
       
+      console.log(outputFilePath);
+
+      
+    //console.log(`Downloading video: ${videoTitle}`);
       await youtubedl(url, {
         output: videoOutputDir,
         format: 'best'
       }).then((output) => {
-        console.log(output)
+        //console.log(output)
         console.log(`Video downloaded successfully to ${videoOutputDir}`);
       }).catch(err => {
         console.error('Error downloading video:', err);
       });
 
-      const audioPromise = manageMetadata(videoOutputDir, outputFilePath, metadata);
+      const audioPromise = manageMetadata(videoOutputDir, outputFilePath, metadata, false);
       await Promise.resolve(audioPromise);
       deleteFile(videoOutputDir);
     } catch (error) {
+      /**
+        No Internet
+        Video Blocked
+       */
       console.error('Error fetching video info:', error);
     }
 };
+
 
 const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, metadata) => {
     try {
@@ -167,7 +174,7 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
       
       // Final Final Path - Store File With Edited Metadata
       const updatedFilePath = `${updateDirectory}/${metadata.Album}`;
-      console.log(`UpdatedFilePath: ${updatedFilePath}`);
+      //console.log(`UpdatedFilePath: ${updatedFilePath}`);
   
       if (!fs.existsSync('playlists')){
         fs.mkdirSync('playlists');
@@ -176,6 +183,8 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
       for (const entry of entries) {
         const videoUrl = `https://www.youtube.com/watch?v=${entry.id}`;
         const videoOutputDir = path.join('playlists', title.replace(/[\/\\:*?"<>|]/g, ''));
+
+        console.log(`Video output dir - ${videoOutputDir}`);
   
         if (!fs.existsSync(videoOutputDir)){
           fs.mkdirSync(videoOutputDir);
@@ -188,6 +197,8 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
   
           const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
           const outputFilePath = path.join(videoOutputDir, `${videoTitle}.${audio_format}`);
+          
+          console.log(`OutFilePath - ${outputFilePath}`);
           
           const promise = youtubedl(videoUrl, {
               output: outputFilePath,
@@ -207,8 +218,7 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
             fs.mkdirSync(updatedFilePath);
           }
         
-          const metadataPromise = manageMetadata(outputFilePath, path.join(updatedFilePath, `${videoTitle}.${audio_format}`), metadata);
-          //manageMetadata(outputFilePath, `${updatedFilePath}/${videoTitle}.${audio_format}`, metadata);
+          const metadataPromise = manageMetadata(outputFilePath, path.join(updatedFilePath, `${videoTitle}.${audio_format}`), metadata, true);
           promises.push(metadataPromise);
           console.log(`Video downloaded successfully to ${updatedFilePath}`);
         } catch (err) {
@@ -235,6 +245,7 @@ const getMetadata = (filePath) => {
   return new Promise((resolve, reject) => {
     exec(`${ffmpegPath} -i "${filePath}" -f ffmetadata -`, (error, stdout, stderr) => {
       if (error) {
+        console.log("Error Getting Metadata: ");
         reject(stderr);
       } else {
         resolve(stdout);
@@ -243,31 +254,11 @@ const getMetadata = (filePath) => {
   });
 };
 
-
-const updateMetadata = (inputFile, outputFile, newMetadata) => {
-
-  console.log(`updateMetadata: input file: ${inputFile} - output file: ${outputFile}`);
-
-  return new Promise((resolve, reject) => {
-    const outputOptions = [];
-    Object.entries(newMetadata).forEach(([key, value]) => {
-
-      let valueEdit = " " + value + " ";
-      outputOptions.push(`-metadata`, `${key}=${valueEdit}`);
-    });
-
-    ffmpeg(inputFile)
-      .outputOptions(outputOptions)
-      .save(outputFile)
-      .on('end', () => resolve('Metadata updated successfully'))
-      .on('error', reject);
-  });
-};
-
 const manageMetadata = async (inputFile, outputFile, metadata) => {
 
-  try {
+  //console.log(`Managing Metadata:\nInput File : ${inputFile} \nOutput File: ${outputFile}\nMetadata: ${metadata}`);
 
+  try {
     const metadataOutput = await getMetadata(decodeURI(inputFile));
     const metadataLines = metadataOutput.split('\n');
     const existingMetadata = {};
@@ -294,10 +285,31 @@ const manageMetadata = async (inputFile, outputFile, metadata) => {
     } else {
       console.log('No new metadata to add');
     }
-    
   } catch (error) {
-    console.error('Error managing metadata:', error);
+    console.log(`\n===========================================\nInput File: ${inputFile} ---- Output File: ${outputFile}`);
+    console.error('Error managing metadata\n', error);
   }
+};
+
+
+const updateMetadata = (inputFile, outputFile, newMetadata) => {
+
+  console.log(`updateMetadata: input file: ${inputFile} - output file: ${outputFile}`);
+
+  return new Promise((resolve, reject) => {
+    const outputOptions = [];
+    Object.entries(newMetadata).forEach(([key, value]) => {
+
+      let valueEdit = " " + value + " ";
+      outputOptions.push(`-metadata`, `${key}=${valueEdit}`);
+    });
+
+    ffmpeg(inputFile)
+      .outputOptions(outputOptions)
+      .save(outputFile)
+      .on('end', () => resolve('Metadata updated successfully'))
+      .on('error', reject);
+  });
 };
 
 const deleteFolder = (temp) => {

@@ -7,6 +7,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
     send: (channel, data) => ipcRenderer.send(channel, data),
     receive: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)),
+    sortDownload: (link) => {
+        ipcRenderer.invoke('sort-download', link);
+    },
     quickDownload: (link) => {
         ipcRenderer.invoke('quick-download', link);
     },

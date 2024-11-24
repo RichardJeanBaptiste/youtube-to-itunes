@@ -37,8 +37,7 @@ const createWindow = () => {
     return result.filePaths[0];   
   })
 
-
-  ipcMain.handle('quick-download', async (event, link) => {
+  ipcMain.handle('sort-download', async (event, link) => {
       const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
       const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com)\/(playlist\?list=)([a-zA-Z0-9_-]+)/;
 
@@ -55,12 +54,39 @@ const createWindow = () => {
       } else {
         console.log("Invalid Link");
       }
-  })
+  });
+
+
+  // ipcMain.handle('quick-download', async (event, link) => {
+  //     const videoRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
+  //     const playlistRegex = /^(https?:\/\/)?(www\.)?(youtube\.com)\/(playlist\?list=)([a-zA-Z0-9_-]+)/;
+
+  //     if(videoRegex.test(link)) {
+  //       //downloadVideo(link, 'audio', 'mp3');
+  //       const popup = new PopupWindow(link, false);
+  //       popup.show();
+
+  //     } else if(playlistRegex.test(link)){
+        
+  //       const popup = new PopupWindow(link, true);
+  //       popup.show();
+  //       //openPopupWindow(link);
+  //     } else {
+  //       console.log("Invalid Link");
+  //     }
+  // })
 
   ipcMain.handle('single-download', async (event, metadata) => {
 
     console.log("Single-Download IPC MAIN PROCESS");
-    singleDownload(metadata.link, metadata.file_location, metadata.format);
+    //console.log(metadata);
+    let input = {
+      Album: metadata.Album,
+      Artist: metadata.Artist,
+      genre: metadata.genre,
+      comments: metadata.comments
+    }
+    singleDownload(metadata.link, metadata.file_location, metadata.format, input);
   });
 
   ipcMain.handle('download-playlist', async (event, metadata) => {
