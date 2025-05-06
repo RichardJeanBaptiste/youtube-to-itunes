@@ -19,6 +19,7 @@ window.electronAPI.receive('videoInfo', (info, link) => {
     if(info.thumbnail != undefined){
         document.getElementById("thumbnail").src = info.thumbnail;
     }
+
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
     document.getElementById("display_loading").style.display = "none";

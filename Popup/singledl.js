@@ -5,13 +5,20 @@
  *  sukuna edit - https://www.youtube.com/watch?v=FzA_UaajqZY
  */
 
-
 window.electronAPI.receive('videoInfo', (info, link) => {
-    console.log(info);
+    //console.log(info);
     currentLink = link;
+
+    if(info.thumbnail != undefined){
+        document.getElementById("thumbnail").src = info.thumbnail;
+    }
+
+    if(info.description.length > 100){
+        info.description = info.description.slice(0, -50) + "....";
+    }
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
-    document.getElementById("thumbnail").src = info.thumbnail;
+    //document.getElementById("thumbnail").src = info.thumbnail;
     document.getElementById("display_loading").style.display = "none";
     document.getElementById("display_window").style.display = "block";
 });
@@ -59,6 +66,7 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
         }
 
         window.electronAPI.downloadSingle(metadata);
+        window.electronAPI.displayProgress(metadata);
         window.close();
         
     }    

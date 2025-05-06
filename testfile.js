@@ -28,7 +28,7 @@ let metadata = {
 // });
 
 // youtubedl("https://www.youtube.com/watch?v=rYEDA3JcQqw", {
-//     output: "/Desktop/ABC123",
+//     output: "playlists/ABC123",
 //     format: 'best'
 // }).then((output) => {
 // console.log(output)

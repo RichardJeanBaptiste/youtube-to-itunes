@@ -17,21 +17,20 @@
     <div id="display_window" style="display: none">
 
         <div class="display_div">
-            <div class="title_info">
+            <div>
                 <img id="thumbnail" src="" width="70px" height="70px"/>
                 <p>Title: <span id="title">""</span></p>
                 <p>Description: <span id="desc">""</span></p>
+
+
                 <div style="display: flex; flex-direction: row;"></div>
                     <button id="file_location">File Location: </button>
                     <p id="loc"></p>
                 </div>
-            </div>
 
-
-            <form id="metadata" class="display_form" action="#">
                 <input id="album_name" type="text" placeholder="Album Name" required/>
                 <input id="artist_name" type="text" placeholder="Artist Name" required/>
-                
+
                 <div style="margin-top: 1.5%;">
                     <label for="genre">Genre: </label>
                     <select id="genre" name="genre">
@@ -70,8 +69,7 @@
                     <button id="clear_btn">Clear</button>
                     <button id="submit_btn" type="submit" style="margin-left: 1.2%;">Download</button>
                 </div>
-                
-            </form>
+            </div> 
         </div>
         
     </div>

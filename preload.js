@@ -21,7 +21,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
     chooseDir: async () => {
         let result = await ipcRenderer.invoke('choose-directory');
-        console.log(result);
+        //console.log(result);
         return result;
+    },
+    displayProgress: async (metadata) => {
+        ipcRenderer.invoke('display-progress', metadata);
+    },
+    onSendDownload: async (callback) => {
+        ipcRenderer.on('send-download', (_event, value) => callback(value));
     }
 })

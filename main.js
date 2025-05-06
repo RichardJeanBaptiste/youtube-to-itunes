@@ -102,6 +102,23 @@ const createWindow = () => {
 
       downloadPlaylist(metadata.link, metadata.file_location, metadata.format, input);
   });
+
+  ipcMain.handle('display-progress', async (event, metadata) => {
+
+    const webContents = event.sender;
+    const win = BrowserWindow.fromWebContents(webContents);
+
+    let input = {
+      Album: metadata.Album,
+      Artist: metadata.Artist,
+      genre: metadata.genre,
+      comments: metadata.comments
+    }
+
+    console.log(`Singledl Screen -- input:${input.Album}`);
+
+    mainWindow.webContents.send('send-download', input);
+  });
 }
 
 

@@ -123,6 +123,9 @@ const quickSingleDownload = async (url, outputDirectory, audio_format) => {
 
 const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
 
+
+    //console.log(`Single download url:${url} -- output:${outputDirectory} -- audio_format:${audio_format} -- metadata:${metadata}`);
+
     try {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true
@@ -146,6 +149,7 @@ const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
         console.error('Error downloading video:', err);
       });
 
+      console.log(`Single Download -- videoOutputDir : ${videoOutputDir} -- outputFilePath: ${outputFilePath} `);
       const audioPromise = manageMetadata(videoOutputDir, outputFilePath, metadata, false);
       await Promise.resolve(audioPromise);
       deleteFile(videoOutputDir);
@@ -256,10 +260,11 @@ const getMetadata = (filePath) => {
 
 const manageMetadata = async (inputFile, outputFile, metadata) => {
 
-  //console.log(`Managing Metadata:\nInput File : ${inputFile} \nOutput File: ${outputFile}\nMetadata: ${metadata}`);
+  console.log(`Managing Metadata:\nInput File : ${inputFile} \nOutput File: ${outputFile}\nMetadata: ${metadata}`);
 
   try {
     const metadataOutput = await getMetadata(decodeURI(inputFile));
+    console.log(metadataOutput);
     const metadataLines = metadataOutput.split('\n');
     const existingMetadata = {};
 
@@ -280,6 +285,7 @@ const manageMetadata = async (inputFile, outputFile, metadata) => {
     }
 
     if (Object.keys(newMetadata).length > 0) {
+
       await updateMetadata(inputFile, outputFile, newMetadata);
       console.log('Metadata added successfully');
     } else {
