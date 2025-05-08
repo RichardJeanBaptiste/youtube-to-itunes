@@ -25,3 +25,28 @@
 form input {
     margin-top: 1.5%;
 }
+
+.title {
+    width: 100vw;
+    height: 30vh;
+}
+
+.title_cont {
+    position: absolute;
+    width: 85vw;
+    top: 2%;
+    left: 19%
+}
+
+.desc_cont {
+    position: absolute;
+    width: 75vw;
+    top: 11%;
+    left: 19%;
+}
+
+.a_img {
+    position: absolute;
+    top: 3%;
+    left: 1%;
+}
