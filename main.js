@@ -27,6 +27,7 @@ const createWindow = () => {
   })
   
   mainWindow.loadFile('index.html');
+  mainWindow.webContents.openDevTools();
 
   ipcMain.handle('choose-directory', async (event) => {
 
