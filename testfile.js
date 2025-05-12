@@ -1,6 +1,7 @@
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 const { exec } = require('child_process');
+const { openFile } =require('./eletron_functions.js');
 const { getVideoInfo, listAudioResolutions, downloadVideo, downloadPlaylist, manageMetadata, deleteFolder, singleDownload } = require('./ytdl-downloads'); 
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 const youtubedl = require('youtube-dl-exec');
@@ -42,5 +43,5 @@ let metadata = {
 // const videoOutputDir = path.join('playlists', title.replace(/[\/\\:*?"<>|]/g, ''));
 
 
-singleDownload("https://www.youtube.com/watch?v=q1kwt2QIzmc", "/Users/rich/Desktop", "m4a", metadata);
+//singleDownload("https://www.youtube.com/watch?v=q1kwt2QIzmc", "/Users/rich/Desktop", "m4a", metadata);
 

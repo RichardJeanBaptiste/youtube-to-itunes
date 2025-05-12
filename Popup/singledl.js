@@ -28,6 +28,15 @@ document.getElementById("file_location").addEventListener('click', async () => {
     document.getElementById("loc").innerHTML = x;    
 });
 
+document.getElementById("clear_btn").addEventListener('click', async () => {
+    document.getElementById("album_name").value = "";
+    document.getElementById("artist_name").value = "";
+    document.getElementById("loc").innerHTML = "";
+    document.getElementById("genre").value = "HipHop/Rap";
+    document.getElementById("format").value = "mp3";
+    document.getElementById("comments").value = ""; 
+});
+
 document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
     if(currentLink === undefined){
@@ -54,6 +63,11 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
             alert('Please fill in both the Album Name and Artist Name fields.');
             return false;
         }
+
+        if(document.getElementById("loc").innerHTML == "" || document.getElementById("loc").innerHTML == null || document.getElementById("loc").innerHTML == undefined){
+            alert("Please enter a file location");
+            return false;
+        } 
         
         let metadata = {
             link: currentLink,
@@ -65,6 +79,7 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
             comments: comments
         }
 
+        
         window.electronAPI.downloadSingle(metadata);
         window.electronAPI.displayProgress(metadata);
         window.close();

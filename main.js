@@ -10,7 +10,7 @@
  */
 
 
-const { app, BrowserWindow, ipcMain, webContents, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents, dialog, shell } = require('electron');
 const fs = require('fs');
 const path = require('node:path');
 const { getVideoInfo, singleDownload, downloadPlaylist } = require('./ytdl-downloads.js');
@@ -22,7 +22,7 @@ const createWindow = () => {
     width: 750,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
   
@@ -113,7 +113,8 @@ const createWindow = () => {
       Album: metadata.Album,
       Artist: metadata.Artist,
       genre: metadata.genre,
-      comments: metadata.comments
+      comments: metadata.comments,
+      file_location: metadata.file_location,
     }
 
     console.log(`Singledl Screen -- input:${input.Album}`);

@@ -31,22 +31,36 @@ form input {
     height: 30vh;
 }
 
+.a_img {
+    position: absolute;
+    top: 3%;
+    left: 1%;
+}
+
 .title_cont {
     position: absolute;
-    width: 85vw;
+    width: 75vw;
     top: 2%;
-    left: 19%
+    left: 23%
 }
 
 .desc_cont {
     position: absolute;
     width: 75vw;
-    top: 11%;
-    left: 19%;
+    height: 16vh;
+    top: 15%;
+    left: 23%;
+    overflow: hidden;
 }
 
-.a_img {
-    position: absolute;
-    top: 3%;
-    left: 1%;
+.info_cont {
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+#file_location {
+    color: rgb(255,193,7);
+    font-size: 28px;
+    margin-left: 0%;
+    padding-bottom: 2%;
 }

@@ -23,36 +23,37 @@
                 <p class="desc_cont">Description: <span id="desc">""</span></p>
             </div>
 
-    
-            <div style="display: flex; flex-direction: row;">
-                <i class="fa-regular fa-folder-open" id="file_location" style="color: rgb(255, 193, 7); font-size: large;"></i>
-                <p id="loc"></p>
-            </div>
-                    
-                
-            <input id="album_name" type="text" placeholder="Album Name" required/>
-            <input id="artist_name" type="text" placeholder="Artist Name" required/>
+            
+            <div class="info_cont">
 
-            <div style="margin-top: 1.5%;">
-                <label for="genre">Genre: </label>
-                <select id="genre" name="genre">
-                    <option value="HipHop/Rap" selected>HipHop/Rap</option>
-                    <option value="R&B">R&B</option>
-                    <option value="Rock">Rock</option>
-                    <option value="Pop">Pop</option>
-                    <option value="Alternative">Alternative</option>
-                    <option value="Books & Spoken">Books & Spoken</option>
-                    <option value="Children's music">Children's music</option>
-                    <option value="Classical">Classical</option>
-                    <option value="Country">Country</option>
-                    <option value="Dance">Dance</option>
-                    <option value="Easy Listening">Easy Listening</option>
-                    <option value="Electronic">Electronic</option>
-                    <option value="Folk">Folk</option>
-                    <option value="Holiday">Holiday</option>
-                    <option value="House">House</option>
-                </select>
-            </div>
+                <div style="display: flex; flex-direction: row;">
+                    <i class="fa-regular fa-folder-open" id="file_location"></i>
+                    <p id="loc" style="margin-left: 1%;"></p>
+                </div>
+
+                <input id="album_name" style="width: 40vw;" type="text" placeholder="Album Name" required/>
+                <input id="artist_name" style="width: 45vw;" type="text" placeholder="Artist Name" required/>
+
+                <div style="margin-top: 1.5%;">
+                    <label for="genre">Genre: </label>
+                    <select id="genre" name="genre">
+                        <option value="HipHop/Rap" selected>HipHop/Rap</option>
+                        <option value="R&B">R&B</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Alternative">Alternative</option>
+                        <option value="Books & Spoken">Books & Spoken</option>
+                        <option value="Children's music">Children's music</option>
+                        <option value="Classical">Classical</option>
+                        <option value="Country">Country</option>
+                        <option value="Dance">Dance</option>
+                        <option value="Easy Listening">Easy Listening</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Folk">Folk</option>
+                        <option value="Holiday">Holiday</option>
+                        <option value="House">House</option>
+                    </select>
+                </div>
 
                 <div style="margin-top: 1.5%;">
                     <label for="format">Formats: </label>
@@ -66,11 +67,13 @@
                     </select>
                 </div>
 
-                <textarea style="margin-top: 1.2%;" id="comments" rows="3" cols="5" placeholder="comments"></textarea>
+                <textarea style="margin-top: 1.2%; width: 45vw; height: 22vh;" id="comments" rows="3" cols="5" placeholder="comments"></textarea>
+
                 <div style="display: flex; flex-direction: row; margin-top: 1.2%;">
                     <button id="clear_btn">Clear</button>
                     <button id="submit_btn" type="submit" style="margin-left: 1.2%;">Download</button>
                 </div>
+            </div>        
         </div>
         
     </div>

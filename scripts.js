@@ -4,7 +4,7 @@ const connectionStatus = document.getElementById("connection_status");
 if(navigator.onLine){
     connectionStatus.innerHTML = "<i class='fa-solid fa-signal' style = 'color : green;'></i>";
 } else {
-    connectionStatus.innerHTML = "<i class='fa-solid fa-circle-xmark'></i>";
+    connectionStatus.innerHTML = "<p>Offline</p>";
 }
 
 searchBtn.addEventListener('click', async () => {
