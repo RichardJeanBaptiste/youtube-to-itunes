@@ -19,29 +19,15 @@ let metadata = {
     Artist: "ABC2",
 }
 
-//manageMetadata('test.m4a','update.mp3', metadata);
-//getVideoInfo("https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7");
-//getVideoInfo("https://www.youtube.com/watch?v=rYEDA3JcQqw");
 
-// const playlistInfo = await youtubedl("https://www.youtube.com/playlist?list=PLN61gg9VNXPpaZx1zREUrPnzqpA5hN4y7", {
-//     dumpSingleJson: true,
-//     flatPlaylist: true
-// });
+const sld = singleDownload("https://www.youtube.com/watch?v=q1kwt2QIzmc", "/Users/rich/Desktop", "m4a", metadata);
 
-// youtubedl("https://www.youtube.com/watch?v=rYEDA3JcQqw", {
-//     output: "playlists/ABC123",
-//     format: 'best'
-// }).then((output) => {
-// console.log(output)
-// console.log(`Video downloaded successfully to ${"ABC123.mp3"}`);
-// }).catch(err => {
-// console.error('Error downloading video:', err);
-// });
+const progress = logger(sld, `ABC`)
+console.log(progress)
 
 
-// const videoUrl = `https://www.youtube.com/watch?v=${entry.id}`;
-// const videoOutputDir = path.join('playlists', title.replace(/[\/\\:*?"<>|]/g, ''));
 
 
-//singleDownload("https://www.youtube.com/watch?v=q1kwt2QIzmc", "/Users/rich/Desktop", "m4a", metadata);
+
+
 

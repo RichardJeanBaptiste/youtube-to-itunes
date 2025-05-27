@@ -1,20 +1,9 @@
-/**
- * 
- *  TODO LIST
- * 
- *    Show Downloads Progress
- *    Cancel Download
- *    Music Player
- *    Change Format After Download
- *    Quick Download vs Popup settings
- */
-
-
 const { app, BrowserWindow, ipcMain, webContents, dialog, shell } = require('electron');
 const fs = require('fs');
 const path = require('node:path');
 const { getVideoInfo, singleDownload, downloadPlaylist } = require('./ytdl-downloads.js');
 const PopupWindow = require('./classes.js');
+const logger = require('progress-estimator')();
 
 
 const createWindow = () => {
@@ -27,7 +16,7 @@ const createWindow = () => {
   })
   
   mainWindow.loadFile('index.html');
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   ipcMain.handle('choose-directory', async (event) => {
 
@@ -87,7 +76,16 @@ const createWindow = () => {
       genre: metadata.genre,
       comments: metadata.comments
     }
-    singleDownload(metadata.link, metadata.file_location, metadata.format, input);
+
+    const sld = singleDownload(metadata.link, metadata.file_location, metadata.format, input);
+    
+    const progress = logger(sld, 'ABC')
+    console.log(progress)
+    
+    // const sld = singleDownload(metadata.link, metadata.file_location, metadata.format, input);
+
+    // const progress = logger(sld, `${metadata.Album}`);
+    // console.log(progress);
   });
 
   ipcMain.handle('download-playlist', async (event, metadata) => {
@@ -141,4 +139,6 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+
 

@@ -123,9 +123,6 @@ const quickSingleDownload = async (url, outputDirectory, audio_format) => {
 
 const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
 
-
-    //console.log(`Single download url:${url} -- output:${outputDirectory} -- audio_format:${audio_format} -- metadata:${metadata}`);
-
     try {
       const videoInfo = await youtubedl(url, {
         dumpSingleJson: true
@@ -135,21 +132,16 @@ const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
       const videoOutputDir = path.join('playlists', `${videoTitle}.${audio_format}`);
       const outputFilePath = `${outputDirectory}/${videoTitle}.${audio_format}`;
       
-      console.log(outputFilePath);
-
-      
-    //console.log(`Downloading video: ${videoTitle}`);
       await youtubedl(url, {
         output: videoOutputDir,
         format: 'best'
       }).then((output) => {
-        //console.log(output)
         console.log(`Video downloaded successfully to ${videoOutputDir}`);
       }).catch(err => {
         console.error('Error downloading video:', err);
       });
 
-      console.log(`Single Download -- videoOutputDir : ${videoOutputDir} -- outputFilePath: ${outputFilePath} `);
+      //console.log(`Single Download -- videoOutputDir : ${videoOutputDir} -- outputFilePath: ${outputFilePath} `);
       const audioPromise = manageMetadata(videoOutputDir, outputFilePath, metadata, false);
       await Promise.resolve(audioPromise);
       deleteFile(videoOutputDir);

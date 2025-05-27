@@ -24,7 +24,7 @@ class PopupWindow {
             this.window.loadFile('./Popup/popup.html');
         } else {
             this.window.loadFile('./Popup/single.html');
-            this.window.webContents.openDevTools();
+            //this.window.webContents.openDevTools();
         }
 
         this.window.webContents.on('did-finish-load', async () => {
