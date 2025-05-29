@@ -78,8 +78,9 @@ const createWindow = () => {
     }
 
     const sld = singleDownload(metadata.link, metadata.file_location, metadata.format, input);
+    const p_title = metadata.Album;
     
-    const progress = logger(sld, 'ABC')
+    const progress = logger(sld, p_title);
     console.log(progress)
     
     // const sld = singleDownload(metadata.link, metadata.file_location, metadata.format, input);
