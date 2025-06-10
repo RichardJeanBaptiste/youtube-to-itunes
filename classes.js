@@ -6,8 +6,8 @@ const { getVideoInfo } = require('./ytdl-downloads.js');
 class PopupWindow {
     constructor(link, isPlaylist) {
         this.window = new BrowserWindow({
-            width: 700,
-            height: 500,
+            width: 800,
+            height: 800,
             modal: false,         // Make the popup non-modal (doesn't disable the main window)
             closable: true,
             resizable: true,

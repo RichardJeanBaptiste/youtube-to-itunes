@@ -24,19 +24,28 @@ window.electronAPI.onSendDownload((value) => {
 
 const createListItem = (Artist, Album) => {
     let li = document.createElement('li');
-    li.style.paddingBottom = '2%';
+    li.style.display= 'flex';
+    li.style.flexDirection = 'row';
+    li.style.marginTop = '2%';
+    li.style.paddingBottom = '4%';
     li.style.borderBottomStyle = 'solid';
     li.style.borderColor = 'lightgrey';
     li.style.borderWidth = '2px';
 
     let p1 = document.createElement("p");
-    p1.textContent = `${Album}`;
-    p1.style.position = 'absolute';
-    p1.style.left = '7%';
+    p1.textContent = `Title: ${Album}`;
+    p1.style.width = '35%';
+    p1.style.height = '50px';
+    p1.style.overflow = 'hidden';
+    p1.style.textOverflow = 'ellipsis';
 
     let p2 = document.createElement("p");
-    p2.textContent = `${Artist}`;
-    p2.style.position = 'absolute';
+    p2.textContent = `Author: ${Artist}`;
+    p2.style.width = '39%';
+    p2.style.height = '50px';
+    p2.style.overflow = 'hidden';
+    p2.style.textOverflow = 'ellipsis';
+    p2.style.marginLeft = '1%';
 
     let i1 = document.createElement("i");
     i1.setAttribute("class", "fa-solid fa-folder-open");
