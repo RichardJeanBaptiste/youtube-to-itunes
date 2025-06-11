@@ -10,67 +10,74 @@
 </head>
 <body style="height: 100vh;">
    
-    <div id="display_loading">
-        <p>Loading......</p>
+    <div id="display_loading" class="d-flex justify-content-center align-items-center h-100 w-100 position-absolute top-0 start-0 bg-light" style="display: block;">
+        <p class="display-4" id="display_p">Loading......</p> 
     </div>
-
-    <div id="display_window" style="display: none;">
-        <div class="display_div">
-
-            <div class="title_info">
-                <img id="thumbnail" src="" width="70px" height="70px"/>
-                <p>Title: <span id="title">""</span></p>
-                <p>Description: <span id="desc">""</span></p>
-                <div style="display: flex; flex-direction: row;"></div>
-                    <button id="file_location">File Location: </button>
-                    <p id="loc"></p>
+    
+    <div id="display_window" class="container-fluid flex-grow-1 py-3" style="display: none;">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-12 col-md-10 col-lg-8 display_div p-3 border rounded shadow-sm">
+                <div class="row align-items-center mb-3" style="height: 8%">
+                    <div class="col-12 col-sm-auto text-center text-sm-start mb-3 mb-sm-0">
+                        <img id="thumbnail" src="" class="img-fluid rounded a_img" style="max-width: 140px; height: auto;" alt="Video Thumbnail"/>
+                    </div>
+                    <div class="col-12 col-sm">
+                        <h3 class="title_cont h5">Title: <span id="title" class="fw-normal">""</span></h3>
+                        <p class="desc_cont text-muted small">Description: <span id="desc" class="fw-normal">""</span></p>
+                    </div>
                 </div>
-            </div>
-
-            <form id="metadata" class="display_form" action="#">
-                <input id="album_name" type="text" placeholder="Album Name" required/>
-                <input id="artist_name" type="text" placeholder="Artist Name" required/>
                 
-                <div style="margin-top: 1.5%;">
-                    <label for="genre">Genre: </label>
-                    <select id="genre" name="genre">
-                        <option value="HipHop/Rap" selected>HipHop/Rap</option>
-                        <option value="R&B">R&B</option>
-                        <option value="Rock">Rock</option>
-                        <option value="Pop">Pop</option>
-                        <option value="Alternative">Alternative</option>
-                        <option value="Books & Spoken">Books & Spoken</option>
-                        <option value="Children's music">Children's music</option>
-                        <option value="Classical">Classical</option>
-                        <option value="Country">Country</option>
-                        <option value="Dance">Dance</option>
-                        <option value="Easy Listening">Easy Listening</option>
-                        <option value="Electronic">Electronic</option>
-                        <option value="Folk">Folk</option>
-                        <option value="Holiday">Holiday</option>
-                        <option value="House">House</option>
-                    </select>
-                </div>
+                <div class="info_cont" style="margin-top: 14%; margin-left: 0%;">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fa-regular fa-folder-open me-2" id="file_location"></i>
+                        <p id="loc" class="mb-0 text-truncate"></p>
+                    </div>
 
-                <div style="margin-top: 1.5%;">
-                    <label for="format">Formats: </label>
-                    <select id="format" name="format">
-                        <option value="mp3">mp3</option>
-                        <option value="m4a">m4a</option>
-                        <option value="wav">wav</option>
-                        <option value="flac">flac</option>
-                        <option value="aac">aac</option>
-                        <option value="ogg">ogg</option>
-                    </select>
-                </div>
-                    
-               
-                <textarea style="margin-top: 1.2%;" id="comments" rows="3" cols="5" placeholder="comments"></textarea>
-                <div style="display: flex; flex-direction: row; margin-top: 1.2%;">
-                    <button id="clear_btn">Clear</button>
-                    <button id="submit_btn" type="submit" style="margin-left: 1.2%;">Download</button>
-                </div>
-            </form>
+                    <input id="album_name" class="form-control mb-2" type="text" placeholder="Album Name" required/>
+                    <input id="artist_name" class="form-control mb-3" type="text" placeholder="Artist Name" required/>
+
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-6 mb-2 mb-sm-0">
+                            <label for="genre" class="form-label">Genre: </label>
+                            <select id="genre" name="genre" class="form-select">
+                                <option value="HipHop/Rap" selected>HipHop/Rap</option>
+                                <option value="R&B">R&B</option>
+                                <option value="Rock">Rock</option>
+                                <option value="Pop">Pop</option>
+                                <option value="Alternative">Alternative</option>
+                                <option value="Books & Spoken">Books & Spoken</option>
+                                <option value="Children's music">Children's music</option>
+                                <option value="Classical">Classical</option>
+                                <option value="Country">Country</option>
+                                <option value="Dance">Dance</option>
+                                <option value="Easy Listening">Easy Listening</option>
+                                <option value="Electronic">Electronic</option>
+                                <option value="Folk">Folk</option>
+                                <option value="Holiday">Holiday</option>
+                                <option value="House">House</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <label for="format" class="form-label">Formats: </label>
+                            <select id="format" name="format" class="form-select">
+                                <option value="mp3">mp3</option>
+                                <option value="m4a">m4a</option>
+                                <option value="wav">wav</option>
+                                <option value="flac">flac</option>
+                                <option value="aac">aac</option>
+                                <option value="ogg">ogg</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control mb-3" id="comments" rows="4" placeholder="comments"></textarea>
+
+                    <div class="d-flex justify-content-end">
+                        <button id="clear_btn" class="btn btn-secondary me-2">Clear</button>
+                        <button id="submit_btn" type="submit" class="btn btn-primary">Download</button>
+                    </div>
+                </div>        
+            </div>
         </div>
     </div>
    

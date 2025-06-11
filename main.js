@@ -83,10 +83,6 @@ const createWindow = () => {
     const progress = logger(sld, p_title);
     console.log(progress)
     
-    // const sld = singleDownload(metadata.link, metadata.file_location, metadata.format, input);
-
-    // const progress = logger(sld, `${metadata.Album}`);
-    // console.log(progress);
   });
 
   ipcMain.handle('download-playlist', async (event, metadata) => {
@@ -116,7 +112,7 @@ const createWindow = () => {
       file_location: metadata.file_location,
     }
 
-    console.log(`Singledl Screen -- input:${input.Album}`);
+    //console.log(`Singledl Screen -- input:${input.Album}`);
 
     mainWindow.webContents.send('send-download', input);
   });

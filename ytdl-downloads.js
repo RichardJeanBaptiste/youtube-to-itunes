@@ -5,6 +5,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('ffmpeg-static');
 const { exec } = require('child_process');
 const logger = require('progress-estimator')();
+const { app } = require('electron');
 //const youtubedl = require('youtube-dl-exec').create('path/to/binary');
 
 
@@ -156,6 +157,8 @@ const singleDownload = async (url, outputDirectory, audio_format, metadata) => {
 
 
 const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, metadata) => {
+
+   
     try {
       const playlistInfo = await youtubedl(playlistUrl, {
         dumpSingleJson: true,
@@ -165,12 +168,14 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
       const promises = [];
 
       const { title, entries } = playlistInfo;
+      console.log(updateDirectory);
+      console.log("================================================");
       console.log(`Downloading playlist: ${title}`);
       console.log(`Number of videos: ${entries.length}`);
       
-      // Final Final Path - Store File With Edited Metadata
+      // // Final Final Path - Store File With Edited Metadata
       const updatedFilePath = `${updateDirectory}/${metadata.Album}`;
-      //console.log(`UpdatedFilePath: ${updatedFilePath}`);
+      console.log(`UpdatedFilePath: ${updatedFilePath}`);
   
       if (!fs.existsSync('playlists')){
         fs.mkdirSync('playlists');
@@ -182,10 +187,6 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
 
         console.log(`Video output dir - ${videoOutputDir}`);
   
-        if (!fs.existsSync(videoOutputDir)){
-          fs.mkdirSync(videoOutputDir);
-        }
-  
         try {
           const videoInfo = await youtubedl(videoUrl, {
             dumpSingleJson: true
@@ -194,25 +195,18 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
           const videoTitle = videoInfo.title.replace(/[\/\\:*?"<>|]/g, '');
           const outputFilePath = path.join(videoOutputDir, `${videoTitle}.${audio_format}`);
           
-          console.log(`OutFilePath - ${outputFilePath}`);
-          
-          const promise = youtubedl(videoUrl, {
-              output: outputFilePath,
-              format: 'best'
-          });
-          
-          const result = await logger(promise, `Obtaining ${videoTitle}`);
-          //console.log(result);
+          //console.log(`OutFilePath - ${outputFilePath}`);
+              
+          console.log(updatedFilePath);
+
+          if(!fs.existsSync(updatedFilePath)){
+            fs.mkdirSync(updatedFilePath);
+          }
           
           await youtubedl(videoUrl, {
             output: outputFilePath,
             format: 'best'
           });
-
-          
-          if(!fs.existsSync(updatedFilePath)){
-            fs.mkdirSync(updatedFilePath);
-          }
         
           const metadataPromise = manageMetadata(outputFilePath, path.join(updatedFilePath, `${videoTitle}.${audio_format}`), metadata, true);
           promises.push(metadataPromise);
@@ -233,8 +227,6 @@ const downloadPlaylist = async (playlistUrl, updateDirectory, audio_format, meta
       console.error('Error fetching playlist info:', playlistError);
     }
 };
-
-
 
 const getMetadata = (filePath) => {
 

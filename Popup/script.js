@@ -23,6 +23,7 @@ window.electronAPI.receive('videoInfo', (info, link) => {
     document.getElementById("title").innerHTML = info.title;
     document.getElementById("desc").innerHTML = info.description;
     document.getElementById("display_loading").style.display = "none";
+    document.getElementById("display_p").style.display = "none";
     document.getElementById("display_window").style.display = "block";
 })
 
@@ -79,6 +80,7 @@ document.getElementById("submit_btn").addEventListener('click', async (e) => {
 
         //console.log(metadata);
         window.electronAPI.downloadPlaylist(metadata);
+        window.electronAPI.displayProgress(metadata);
         window.close();
         
     }    
